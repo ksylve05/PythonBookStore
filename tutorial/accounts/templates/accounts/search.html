@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <h1>Home Page</h1>
+      <h2>Welcome {{user}}</h2>
+      <form action="{% url 'search' %}" method="POST" class="row mt-2">
+        {% csrf_token %}
+        <div class="col-10">
+          <input
+            class="form-control"
+            id="searchbox"
+            name="q"
+            type="text"
+            value="{{ request.GET.q }}"
+            placeholder="Search..."
+          />
+        </div>
+        <div class="col-2">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+      <div class="row">
+        {% for item in book %}
+        <div
+          class="modal fade"
+          id="modal{{item.id}}"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  {{item.title}}
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <img
+                  class="card-img-top"
+                  src="{{item.image}}"
+                  alt="Card image cap"
+                />
+                <div class="card-body">
+                  <h3 class="card-title">Title: {{item.title}}</h3>
+                  <h5 class="card-title">Author: {{item.author}}</h5>
+                  <h6 class="card-text">Price: ${{item.price}}</h6>
+                  <h6 class="card-text">Quanity: {{item.quanity}}</h6>
+                  <a href="#" class="btn btn-primary">Add To Cart</a>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3" style="padding: 10px 0px">
+          <div class="card" style="width: 18rem">
+            <img
+              style="height: 250px"
+              class="card-img-top"
+              src="{{item.image}}"
+              alt="Card image cap"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{item.title}}</h5>
+              <p class="card-text">${{item.price}}</p>
+              <a href="#" class="btn btn-primary">Add To Cart</a>
+              <a
+                href="#"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#modal{{item.id}}"
+                >View</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>

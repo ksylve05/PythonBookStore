@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    {% endblock %} {% load static %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'accounts/style.css' %}"
+    />
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <h1>Register</h1>
+      <form method="post">
+        {%csrf_token%} {{form.as_p}}
+        <button type="submit">Register</button>
+      </form>
+    </div>
+    {% endblock %}
+  </body>
+</html>

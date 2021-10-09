@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <h1>Admin Page</h1>
+      <h2>Welcome {{user}}</h2>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add Book
+      </button>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Book</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'addBook' %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="title" aria-describedby="title" name="title">
+                </div>
+                <div class="mb-3">
+                  <label for="author" class="form-label">Author</label>
+                  <input type="text" class="form-control" id="author" name="author">
+                </div>
+                <div class="mb-3">
+                  <label for="price" class="form-label">Price</label>
+                  <input type="number" class="form-control" id="price" name="price">
+                </div>
+                <div class="mb-3">
+                  <label for="quanity" class="form-label">Quanity</label>
+                  <input type="number" class="form-control" id="quanity" name="quanity">
+                </div>
+                <div class="mb-3">
+                  <label for="image" class="form-label">ImageUrl</label>
+                  <input type="text" class="form-control" id="image" name="image">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quanity</th>
+            <th scope="col">Image</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for item in book %}
+            <div class="modal fade" id="modal{{item.id}}" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'editBook' %}" method="POST">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" aria-describedby="title" name="title">
+                      </div>
+                      <div class="mb-3">
+                        <label for="author" class="form-label">Author</label>
+                        <input type="text" class="form-control" id="author" name="author">
+                      </div>
+                      <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="price">
+                      </div>
+                      <div class="mb-3">
+                        <label for="quanity" class="form-label">Quanity</label>
+                        <input type="number" class="form-control" id="quanity" name="quanity">
+                      </div>
+                      <div class="mb-3">
+                        <label for="image" class="form-label">ImageUrl</label>
+                        <input type="text" class="form-control" id="image" name="image">
+                      </div>
+                      <input type="hidden" value={{item.id}} name="edit">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <tr>
+                <th scope="row">{{item.id}}</th>
+                <td>{{item.title}}</td>
+                <td>{{item.price}}</td>
+                <td>{{item.quanity}}</td>
+                <td>{{item.image}}</td>
+                <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal{{item.id}}">Edit</button></td>
+                <form action="{% url 'deleteBook' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" value={{item.id}} name="delete">
+                  <td><button type="submit" class="btn btn-danger" >Delete</button></td>
+                </form>
+              </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+        Add User
+      </button>
+      <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'addUser' %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="title" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" aria-describedby="title" name="username">
+                </div>        
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <div class="modal fade" id="modal1{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'editUser' %}" method="POST">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="title" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" aria-describedby="title" name="username">
+                      </div>                              
+                      <input type="hidden" value={{user.id}} name="edit">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <tr>
+                <th scope="row">{{user.id}}</th>
+                <td>{{user.username}}</td>
+                <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal1{{user.id}}">Edit</button></td>
+                <form action="{% url 'deleteUser' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" value={{user.id}} name="delete">
+                  <td><button type="submit" class="btn btn-danger" >Delete</button></td>
+                </form>
+              </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+  </table>
+    {% endblock %}
+  </body>
+</html>

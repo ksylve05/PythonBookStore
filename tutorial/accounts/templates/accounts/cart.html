@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <script type="text/javascript">
+      function submitQuanity() {
+        document.getElementById("update").submit();
+      }
+    </script>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div class="container">
+      <h1>Cart Page</h1>
+      <h2>Welcome {{user}}</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Title</th>
+            <th scope="col">Quanity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Purchase</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <th scope="row">{{order.id}}</th>
+            <td>
+              <img
+                src="{{order.image}}"
+                class="img-thumbnail"
+                alt="book"
+                style="height: 100px"
+              />
+            </td>
+            <td>{{order.title}}</td>
+            <td>
+              <form action="{% url 'updateOrder' %}" method="POST" id="update">
+                {% csrf_token %}
+                <input type="hidden" value="{{order.id}}" name="update" />
+                <input
+                  type="number"
+                  id="typeNumber"
+                  value="{{order.quanity}}"
+                  min="1"
+                  class="form-control"
+                  style="width: 100px"
+                  onchange="submitQuanity()"
+                  name="quanity"
+                />
+              </form>
+            </td>
+            <td>${{order.price}}</td>
+            <td>
+              <form action="{% url 'deleteOrder' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{order.id}}" name="delete" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+            <td>
+              <form action="{% url 'addOrderedItems' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{user.id}}" name="userId" />
+                <input type="hidden" value="{{order.price}}" name="price" />
+                <input type="hidden" value="{{order.quanity}}" name="quanity" />
+                <input type="hidden" value="{{order.image}}" name="image" />
+                <input type="hidden" value="{{order.title}}" name="title" />
+                <button type="submit" class="btn btn-primary">Purchase</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h2>Total: ${{total}}</h2>
+    </div>
+    {% endblock %}
+  </body>
+</html>
